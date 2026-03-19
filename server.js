@@ -1,35 +1,32 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
+
 const app = express();
+
+// --- MIDDLEWARES (Siempre van arriba) ---
+app.use(cors());
+app.use(express.json()); // Permite recibir datos en formato JSON
 app.use(express.static(__dirname));
 
+// --- RUTA PRINCIPAL ---
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/proveedores', (req, res) => {
-    res.sendFile(__dirname + '/proveedores.html'); 
-});
-
-app.use(express.json());
-app.use(cors());
-
-// Configuración con Variables de Entorno (necesario para Vercel)
-const db = mysql.createConnection({
+// --- CONFIGURACIÓN DE BASE DE DATOS (Pool es mejor para Vercel) ---
+const db = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: process.env.DB_PORT || 3306
+    port: process.env.DB_PORT || 4000, // TiDB suele usar el puerto 4000
+    ssl: {
+        rejectUnauthorized: true // TiDB en la nube requiere SSL
+    }
 });
 
-db.connect(err => {
-    if (err) console.error('Error de conexión:', err);
-    else console.log('Conectado a la base de datos en la nube');
-});
-
-// --- RUTAS DE LA API ---
+// --- RUTAS DE LA API (Para guardar datos) ---
 
 // 1. Catálogo de Conceptos
 app.post('/api/conceptos', (req, res) => {
@@ -68,5 +65,17 @@ app.post('/api/productos', (req, res) => {
     });
 });
 
+// 5. Catálogo de Proveedores (¡Nueva!)
+app.post('/api/proveedores', (req, res) => {
+    const { clave, rfc, razon, domicilio, correo, telefono } = req.body;
+    const query = 'INSERT INTO proveedores (clave, rfc, razon_social, domicilio, correo, telefono) VALUES (?, ?, ?, ?, ?, ?)';
+    db.query(query, [clave, rfc, razon, domicilio, correo, telefono], (err) => {
+        if (err) return res.status(500).json(err);
+        res.json({ mensaje: 'Proveedor guardado' });
+    });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor en puerto ${PORT}`));
+
+module.exports = app; // Exportar la app es necesario para que Vercel la lea correctamente
