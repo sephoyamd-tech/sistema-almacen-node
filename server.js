@@ -7,6 +7,10 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/proveedores', (req, res) => {
+    res.sendFile(__dirname + '/proveedores.html'); 
+});
+
 app.use(express.json());
 app.use(cors());
 
