@@ -2,52 +2,34 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>La Gran Empresa - Dashboard Almacén</title>
+    <title>La Gran Empresa - Sistema de Almacén</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        .custom-card { border: 2px solid #333; border-radius: 40px; padding: 30px; background: white; }
+        .custom-card { border: 2px solid #333; border-radius: 40px; padding: 30px; background: white; margin-bottom: 20px; }
         .bg-blue { background-color: #007bff; color: white; border-radius: 15px; }
         .seccion { display: none; }
         .seccion.activa { display: block; }
-        .modal-content { border-radius: 30px; }
-
-        /* Estilos para el submenú lateral */
-        .dropdown-submenu {
-            position: relative;
-        }
-        .dropdown-submenu > .dropdown-menu {
-            top: 0;
-            left: 100%;
-            margin-top: -1px;
-            display: none;
-        }
-        .dropdown-submenu:hover > .dropdown-menu {
-            display: block;
-        }
+        .lista-consulta { max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 10px; padding: 10px; background: #f9f9f9; }
     </style>
 </head>
 <body class="bg-light">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow mb-4">
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="#" onclick="navegar('inicio')">
-                <i class="bi bi-buildings me-2"></i>LA GRAN EMPRESA
-            </a>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <a class="navbar-brand fw-bold" href="#" onclick="navegar('inicio')"><i class="bi bi-buildings me-2"></i>LA GRAN EMPRESA</a>
+            <div class="collapse navbar-collapse">
                 <ul class="navbar-nav">
-                    
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Catálogos</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#" onclick="abrirCatalogo('Conceptos')">Conceptos</a></li>
                             <li><a class="dropdown-item" href="#" onclick="abrirCatalogo('Destinos')">Destinos</a></li>
                             <li><a class="dropdown-item" href="#" onclick="navegar('productos')">Productos</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="navegar('proveedores')">Proveedores</a></li> 
-                            <li><a class="dropdown-item" href="#" onclick="abrirCatalogo('Unidades de Medida')">Unidades de Medida</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="navegar('proveedores')">Proveedores</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="abrirCatalogo('Unidades')">Unidades de Medida</a></li>
                         </ul>
                     </li>
-                    
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Documentos</a>
                         <ul class="dropdown-menu">
@@ -55,25 +37,6 @@
                             <li><a class="dropdown-item" href="#" onclick="abrirDocumento('Salida')">Salidas</a></li>
                         </ul>
                     </li>
-                     
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Reportes del sistema</a>
-                        <ul class="dropdown-menu">
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-toggle" href="#">Catálogos</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#" onclick="abrirCatalogo('Conceptos')">Conceptos</a></li>
-                                    <li><a class="dropdown-item" href="#" onclick="abrirCatalogo('Destinos')">Destinos</a></li>
-                                    <li><a class="dropdown-item" href="#" onclick="navegar('productos')">Productos</a></li>
-                                    <li><a class="dropdown-item" href="#" onclick="navegar('proveedores')">Proveedores</a></li>
-                                    <li><a class="dropdown-item" href="#" onclick="abrirCatalogo('Unidades de Medida')">Unidades de Medida</a></li>
-                                </ul>
-                            </li>
-                            <li><a class="dropdown-item" href="#" onclick="abrirDocumento('Salida')">Documentos</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="abrirDocumento('Salida')">Existencia de almacén</a></li>
-                        </ul>
-                    </li>
-                    
                 </ul>
             </div>
         </div>
@@ -81,358 +44,154 @@
 
     <div class="container">
         <div id="vista-inicio" class="seccion activa text-center p-5">
-            <h1 class="display-3 fw-bold">Sistema de Almacén</h1>
-            <p class="lead">Gestione sus catálogos y documentos de inventario.</p>
+            <h1 class="display-3 fw-bold">Bienvenido</h1>
+            <p class="lead">Sistema de Almacén conectado a TiDB Cloud.</p>
         </div>
 
         <div id="vista-catalogos" class="seccion">
             <div class="custom-card shadow mx-auto" style="max-width: 600px;">
                 <h2 id="titulo-catalogo" class="text-center mb-4">Catálogo</h2>
                 <form id="formCatalogo">
-                    <div class="mb-3">
-                        <label class="fw-bold">Clave</label>
-                        <input type="text" id="cat-clave" class="form-control" required>
-                    </div>
-                    <div class="mb-4">
-                        <label class="fw-bold">Descripción</label>
-                        <input type="text" id="cat-desc" class="form-control" required>
-                    </div>
+                    <div class="mb-3"><label class="fw-bold">Clave</label><input type="text" id="cat-clave" class="form-control" required></div>
+                    <div class="mb-4"><label class="fw-bold">Descripción</label><input type="text" id="cat-desc" class="form-control" required></div>
                     <div class="d-flex justify-content-center gap-3">
-                        <button type="submit" class="btn bg-blue px-4">Guardar en Catálogo</button>
-                        <button type="button" class="btn btn-secondary px-4" style="border-radius:15px" onclick="navegar('inicio')">Cancelar</button>
+                        <button type="submit" class="btn bg-blue px-4">Guardar</button>
+                        <button type="button" class="btn btn-secondary px-4" onclick="navegar('inicio')">Cancelar</button>
                     </div>
                 </form>
+                <hr>
+                <h5>Registros en la Base de Datos:</h5>
+                <div id="lista-generica" class="lista-consulta">Cargando datos...</div>
             </div>
         </div>
 
         <div id="vista-proveedores" class="seccion">
             <div class="custom-card shadow mx-auto" style="max-width: 700px;">
-                <h2 class="text-center mb-4">Catálogo de Proveedores</h2>
+                <h2 class="text-center mb-4">Proveedores</h2>
                 <form id="formProveedores">
                     <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="fw-bold">Número (Clave)</label>
-                            <input type="text" id="prov-clave" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="fw-bold">RFC</label>
-                            <input type="text" id="prov-rfc" class="form-control" required>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="fw-bold">Razón Social del Proveedor</label>
-                            <input type="text" id="prov-razon" class="form-control" required>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="fw-bold">Domicilio</label>
-                            <input type="text" id="prov-domicilio" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="fw-bold">Correo Electrónico</label>
-                            <input type="email" id="prov-correo" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="fw-bold">Teléfono</label>
-                            <input type="tel" id="prov-telefono" class="form-control" required>
-                        </div>
+                        <div class="col-6"><label>Clave</label><input type="text" id="prov-clave" class="form-control" required></div>
+                        <div class="col-6"><label>RFC</label><input type="text" id="prov-rfc" class="form-control" required></div>
+                        <div class="col-12"><label>Razón Social</label><input type="text" id="prov-razon" class="form-control" required></div>
+                        <div class="col-12"><label>Correo</label><input type="email" id="prov-correo" class="form-control" required></div>
                     </div>
-                    <div class="d-flex justify-content-center mt-4 gap-3">
-                        <button type="submit" class="btn bg-blue px-4">Guardar Proveedor</button>
-                        <button type="button" class="btn btn-secondary px-4" style="border-radius:15px" onclick="navegar('inicio')">Cancelar</button>
-                    </div>
+                    <button type="submit" class="btn bg-blue mt-4 w-100">Guardar Proveedor</button>
                 </form>
+                <hr>
+                <h5>Lista de Proveedores (Persistencia):</h5>
+                <div id="lista-proveedores" class="lista-consulta"></div>
             </div>
         </div>
 
         <div id="vista-productos" class="seccion">
             <div class="custom-card shadow mx-auto" style="max-width: 700px;">
-                <h2 class="text-center mb-4">Catálogo de Productos</h2>
+                <h2 class="text-center mb-4">Productos</h2>
                 <form id="formProductos">
                     <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="fw-bold">Clave del Producto</label>
-                            <input type="text" id="prod-clave" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="fw-bold">Precio</label>
-                            <input type="number" step="0.01" id="prod-precio" class="form-control" required>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="fw-bold">Descripción</label>
-                            <input type="text" id="prod-desc" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="fw-bold">Unidad de Medida</label>
-                            <select id="prod-unidades" class="form-select" required>
-                                <option value="">Seleccione una unidad...</option>
-                                <option value="pz">Pieza (pz)</option>
-                                <option value="kg">Kilogramos (kg)</option>
-                                <option value="caja">Caja</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="fw-bold">Proveedor</label>
-                            <select id="prod-proveedor" class="form-select" required>
-                                <option value="">Seleccione un proveedor...</option>
-                                <option value="1">Distribuidora ACME</option>
-                                <option value="2">Proveedores del Norte</option>
-                            </select>
-                        </div>
+                        <div class="col-6"><label>Clave</label><input type="text" id="prod-clave" class="form-control" required></div>
+                        <div class="col-6"><label>Precio</label><input type="number" step="0.01" id="prod-precio" class="form-control" required></div>
+                        <div class="col-12"><label>Descripción</label><input type="text" id="prod-desc" class="form-control" required></div>
                     </div>
-                    <div class="d-flex justify-content-center mt-4 gap-3">
-                        <button type="submit" class="btn bg-blue px-4">Guardar Producto</button>
-                        <button type="button" class="btn btn-secondary px-4" style="border-radius:15px" onclick="navegar('inicio')">Cancelar</button>
-                    </div>
+                    <button type="submit" class="btn bg-blue mt-4 w-100">Guardar Producto</button>
                 </form>
+                <hr>
+                <h5>Lista de Productos (Persistencia):</h5>
+                <div id="lista-productos" class="lista-consulta"></div>
             </div>
         </div>
 
         <div id="vista-documentos" class="seccion">
-            <div class="custom-card shadow mb-4">
-                <h3 id="titulo-doc" class="mb-4">Documento de Almacén</h3>
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="fw-bold">No. Documento</label>
-                        <input type="text" id="doc-numero" class="form-control">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="fw-bold">Fecha</label>
-                        <input type="date" id="doc-fecha" class="form-control">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="fw-bold">Tipo</label>
-                        <input type="text" id="doc-tipo" class="form-control bg-light" readonly>
-                    </div>
-                    <div class="col-md-6">
-                        <label id="lbl-entidad" class="fw-bold">Proveedor / Destino</label>
-                        <select id="doc-entidad" class="form-select"></select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="fw-bold">Concepto</label>
-                        <select id="doc-concepto" class="form-select"></select>
-                    </div>
-                </div>
-                <div class="text-center mt-4">
-                    <button class="btn bg-blue px-4" data-bs-toggle="modal" data-bs-target="#modalProd">Agregar Movimientos</button>
-                </div>
-            </div>
-
             <div class="custom-card shadow">
-                <h6 class="fw-bold text-center">REGISTRO DE MOVIMIENTOS</h6>
-                <table class="table table-bordered mt-3">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>No</th><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-movimientos"></tbody>
-                </table>
-                <div class="text-end pe-4">
-                    <h4 class="fw-bold">TOTAL: <span id="doc-total">$0.00</span></h4>
+                <h3 id="titulo-doc">Documento</h3>
+                <div class="row g-3 mt-2">
+                    <div class="col-md-4"><label>No. Doc</label><input type="text" id="doc-numero" class="form-control"></div>
+                    <div class="col-md-4"><label>Fecha</label><input type="date" id="doc-fecha" class="form-control"></div>
+                    <div class="col-md-4"><label>Tipo</label><input type="text" id="doc-tipo" class="form-control bg-light" readonly></div>
                 </div>
-                <div class="d-flex justify-content-center mt-4 gap-3">
-                    <button class="btn bg-blue w-50" onclick="guardarDocumentoCompleto()">Guardar Documento y Movimientos</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modalProd" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content p-4">
-                <h4 class="text-center fw-bold mb-4">AGREGAR MOVIMIENTO</h4>
-                <div class="mb-3">
-                    <label>Producto</label>
-                    <input type="text" id="m-prod" class="form-control" style="background:#fff9c4">
-                </div>
-                <div class="row mb-3">
-                    <div class="col-6">
-                        <label>Precio</label>
-                        <input type="number" id="m-precio" class="form-control">
-                    </div>
-                    <div class="col-6">
-                        <label>Cantidad</label>
-                        <input type="number" id="m-cant" class="form-control">
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <label>Subtotal</label>
-                    <input type="text" id="m-sub" class="form-control bg-light" readonly>
-                </div>
-                <div class="d-flex justify-content-center gap-2">
-                    <button class="btn bg-blue px-4" onclick="agregarMovimiento()">Aceptar</button>
-                    <button class="btn btn-secondary px-4" style="border-radius:15px" data-bs-dismiss="modal">Cancelar</button>
-                </div>
+                <button class="btn bg-blue mt-4 w-100" onclick="guardarDocumentoFinal()">Guardar Documento en TiDB</button>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // VARIABLES DE ESTADO
-        let movimientosActuales = [];
-        let tipoDocumentoActual = "";
+        let tipoActual = "";
 
-        // --- NAVEGACIÓN ---
-        function navegar(id) {
+        async function navegar(id) {
             document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
             document.getElementById('vista-' + id).classList.add('activa');
+            if(id === 'proveedores') cargarDatos('/api/proveedores', 'lista-proveedores');
+            if(id === 'productos') cargarDatos('/api/productos', 'lista-productos');
         }
 
-        // --- LÓGICA DE CATÁLOGOS GENÉRICOS (Conceptos, Destinos, Unidades) ---
-        function abrirCatalogo(nombre) {
-            document.getElementById('titulo-catalogo').innerText = "Catálogo de " + nombre;
-            document.getElementById('formCatalogo').reset();
+        function abrirCatalogo(nom) {
+            tipoActual = nom.toLowerCase();
+            document.getElementById('titulo-catalogo').innerText = "Catálogo de " + nom;
             navegar('catalogos');
+            cargarDatos('/api/' + tipoActual, 'lista-generica');
         }
 
-        document.getElementById('formCatalogo').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const titulo = document.getElementById('titulo-catalogo').innerText;
-            const clave = document.getElementById('cat-clave').value;
-            const descripcion = document.getElementById('cat-desc').value;
-
-            let ruta = '';
-            if (titulo.includes('Conceptos')) ruta = '/api/conceptos';
-            else if (titulo.includes('Destinos')) ruta = '/api/destinos';
-            else if (titulo.includes('Unidades')) ruta = '/api/unidades';
-
-            try {
-                const respuesta = await fetch(ruta, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ clave, descripcion })
-                });
-                const data = await respuesta.json();
-                alert(data.mensaje || 'Guardado exitosamente en TiDB');
-                document.getElementById('formCatalogo').reset();
-                navegar('inicio');
-            } catch (error) {
-                alert('Error al conectar con el servidor');
-                console.error(error);
-            }
-        });
-
-        // --- LÓGICA DE PROVEEDORES ---
-        document.getElementById('formProveedores').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const proveedorData = {
-                clave: document.getElementById('prov-clave').value,
-                rfc: document.getElementById('prov-rfc').value,
-                razon: document.getElementById('prov-razon').value,
-                domicilio: document.getElementById('prov-domicilio').value,
-                correo: document.getElementById('prov-correo').value,
-                telefono: document.getElementById('prov-telefono').value
-            };
-
-            try {
-                const respuesta = await fetch('/api/proveedores', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(proveedorData)
-                });
-                const data = await respuesta.json();
-                alert(data.mensaje || 'Proveedor guardado en TiDB');
-                document.getElementById('formProveedores').reset();
-                navegar('inicio');
-            } catch (error) {
-                alert('Error al guardar proveedor');
-                console.error(error);
-            }
-        });
-
-        // --- LÓGICA DE PRODUCTOS ---
-        document.getElementById('formProductos').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const productoData = {
-                clave: document.getElementById('prod-clave').value,
-                precio: parseFloat(document.getElementById('prod-precio').value),
-                descripcion: document.getElementById('prod-desc').value,
-                unidad: document.getElementById('prod-unidades').value,
-                proveedor: document.getElementById('prod-proveedor').value
-            };
-
-            try {
-                const respuesta = await fetch('/api/productos', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(productoData)
-                });
-                const data = await respuesta.json();
-                alert(data.mensaje || 'Producto guardado en TiDB');
-                document.getElementById('formProductos').reset();
-                navegar('inicio');
-            } catch (error) {
-                alert('Error al guardar producto');
-                console.error(error);
-            }
-        });
-
-        // --- LÓGICA DE DOCUMENTOS (Movimientos de almacén) ---
-        function abrirDocumento(tipo) {
-            tipoDocumentoActual = tipo;
-            movimientosActuales = [];
-            document.getElementById('titulo-doc').innerText = "Documento de " + tipo;
-            document.getElementById('doc-tipo').value = tipo;
-            document.getElementById('lbl-entidad').innerText = (tipo === 'Entrada') ? "Proveedor" : "Destino";
-            actualizarTabla();
+        function abrirDocumento(t) {
+            document.getElementById('titulo-doc').innerText = "Documento de " + t;
+            document.getElementById('doc-tipo').value = t;
             navegar('documentos');
         }
 
-        const inPre = document.getElementById('m-precio');
-        const inCan = document.getElementById('m-cant');
-        const inSub = document.getElementById('m-sub');
+        async function cargarDatos(ruta, elementoId) {
+            const div = document.getElementById(elementoId);
+            try {
+                const res = await fetch(ruta);
+                const datos = await res.json();
+                div.innerHTML = datos.length > 0 
+                    ? datos.map(d => `<div class="border-bottom py-1"><b>${d.clave}</b> - ${d.descripcion || d.razon_social || d.rfc}</div>`).join('')
+                    : "No hay registros aún.";
+            } catch (e) { div.innerHTML = "Error al cargar."; }
+        }
 
-        [inPre, inCan].forEach(input => {
-            input.addEventListener('input', () => {
-                const res = (parseFloat(inPre.value) || 0) * (parseFloat(inCan.value) || 0);
-                inSub.value = res.toFixed(2);
-            });
+        // --- SUBMITS ---
+        document.getElementById('formCatalogo').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const body = { clave: document.getElementById('cat-clave').value, descripcion: document.getElementById('cat-desc').value };
+            await enviar('/api/' + tipoActual, body);
+            abrirCatalogo(tipoActual.charAt(0).toUpperCase() + tipoActual.slice(1));
         });
 
-        function agregarMovimiento() {
-            const p = document.getElementById('m-prod').value;
-            const pre = parseFloat(inPre.value) || 0;
-            const can = parseFloat(inCan.value) || 0;
+        document.getElementById('formProveedores').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const body = { 
+                clave: document.getElementById('prov-clave').value, rfc: document.getElementById('prov-rfc').value,
+                razon: document.getElementById('prov-razon').value, domicilio: 'N/A', 
+                correo: document.getElementById('prov-correo').value, telefono: 'N/A' 
+            };
+            await enviar('/api/proveedores', body);
+            navegar('proveedores');
+        });
 
-            if(p && can > 0) {
-                movimientosActuales.push({ 
-                    no: movimientosActuales.length + 1, 
-                    producto: p, 
-                    precio: pre, 
-                    cantidad: can, 
-                    subtotal: pre * can 
-                });
-                actualizarTabla();
-                bootstrap.Modal.getInstance(document.getElementById('modalProd')).hide();
-                document.getElementById('m-prod').value = ""; inPre.value = ""; inCan.value = ""; inSub.value = "";
-            }
+        document.getElementById('formProductos').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const body = { 
+                clave: document.getElementById('prod-clave').value, precio: document.getElementById('prod-precio').value,
+                descripcion: document.getElementById('prod-desc').value, unidad: 'PZ', proveedor: 'N/A' 
+            };
+            await enviar('/api/productos', body);
+            navegar('productos');
+        });
+
+        async function enviar(ruta, body) {
+            const res = await fetch(ruta, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
+            const data = await res.json();
+            alert(data.mensaje);
         }
 
-        function actualizarTabla() {
-            const cuerpo = document.getElementById('tabla-movimientos');
-            cuerpo.innerHTML = "";
-            let total = 0;
-            movimientosActuales.forEach(m => {
-                total += m.subtotal;
-                cuerpo.innerHTML += `<tr>
-                    <td>${m.no}</td><td>${m.producto}</td><td>${m.cantidad}</td>
-                    <td>$${m.precio.toFixed(2)}</td><td>$${m.subtotal.toFixed(2)}</td>
-                </tr>`;
-            });
-            document.getElementById('doc-total').innerText = `$${total.toFixed(2)}`;
-        }
-
-        function guardarDocumentoCompleto() {
-            const dataFinal = {
+        async function guardarDocumentoFinal() {
+            const doc = {
                 numero: document.getElementById('doc-numero').value,
                 fecha: document.getElementById('doc-fecha').value,
-                tipo: tipoDocumentoActual,
-                entidad: document.getElementById('doc-entidad').value,
-                concepto: document.getElementById('doc-concepto').value,
-                items: movimientosActuales
+                tipo: document.getElementById('doc-tipo').value,
+                entidad: 'Prueba', concepto: 'Prueba'
             };
-            console.log("Objeto preparado para la BD:", dataFinal);
-            alert("¡Frontend listo! Para guardar este documento, más adelante crearemos su ruta en la BD.");
+            await enviar('/api/documentos', doc);
+            navegar('inicio');
         }
     </script>
 </body>
